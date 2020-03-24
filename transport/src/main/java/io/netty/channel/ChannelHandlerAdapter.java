@@ -62,6 +62,7 @@ public abstract class ChannelHandlerAdapter implements ChannelHandler {
     }
 
     /**
+     * 当把ChannelHandler添加到ChannelPipeline时调用
      * Do nothing by default, sub-classes may override this method.
      */
     @Override
@@ -70,6 +71,7 @@ public abstract class ChannelHandlerAdapter implements ChannelHandler {
     }
 
     /**
+     * 当从ChannelPipeline中移除ChannelHandler时调用
      * Do nothing by default, sub-classes may override this method.
      */
     @Override
@@ -78,6 +80,7 @@ public abstract class ChannelHandlerAdapter implements ChannelHandler {
     }
 
     /**
+     * 当处理过程中在ChannelPipeline中有错误产生时被调用
      * Calls {@link ChannelHandlerContext#fireExceptionCaught(Throwable)} to forward
      * to the next {@link ChannelHandler} in the {@link ChannelPipeline}.
      *

@@ -24,6 +24,7 @@ public interface ByteBufAllocator {
     ByteBufAllocator DEFAULT = ByteBufUtil.DEFAULT_ALLOCATOR;
 
     /**
+     * 创建一个基于堆或者直接内存存储的ByteBuf
      * Allocate a {@link ByteBuf}. If it is a direct or heap buffer
      * depends on the actual implementation.
      */
@@ -58,6 +59,7 @@ public interface ByteBufAllocator {
     ByteBuf ioBuffer(int initialCapacity, int maxCapacity);
 
     /**
+     * 返回一个基于堆内存存储的ByteBuf
      * Allocate a heap {@link ByteBuf}.
      */
     ByteBuf heapBuffer();
@@ -74,6 +76,7 @@ public interface ByteBufAllocator {
     ByteBuf heapBuffer(int initialCapacity, int maxCapacity);
 
     /**
+     * 返回一个基于直接内存存储的ByteBuf
      * Allocate a direct {@link ByteBuf}.
      */
     ByteBuf directBuffer();
@@ -96,6 +99,7 @@ public interface ByteBufAllocator {
     CompositeByteBuf compositeBuffer();
 
     /**
+     * 返回一个可以通过添加最大到指定数目的基于堆的或者基于字节内存存储的缓冲区来扩展的CompositeByteBuf
      * Allocate a {@link CompositeByteBuf} with the given maximum number of components that can be stored in it.
      * If it is a direct or heap buffer depends on the actual implementation.
      */

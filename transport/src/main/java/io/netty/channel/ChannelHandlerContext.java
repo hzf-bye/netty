@@ -121,10 +121,19 @@ import java.nio.channels.Channels;
  * {@link ChannelPipeline} to find out more about inbound and outbound operations,
  * what fundamental differences they have, how they flow in a  pipeline,  and how to handle
  * the operation in your application.
+ *
+ * ChannelHandlerContext代表了ChannelHandler和ChannelPipeline之间的关联，每当有ChannelHandler添加到ChannelPipeline中时，
+ * 都会创建ChannelHandlerContext。ChannelHandlerContext的主要功能是管理它所关联的ChannelHandler和在同一个ChannelPipeline
+ * 中的其它ChannelHandler之间的交互。
+ * ChannelHandlerContext有很多方法，其中一些方法也存在与Channel和ChannelPipeline中，但是有一点重要的不同。
+ * 如果调用Channel或者ChannelPipeline上的这些方法，它们将沿着整个ChannelPipeline进行传播。
+ * 而调用ChannelHandlerContext上的相同方法，则将从当前关联的ChannelHandler开始，并且只会传播给位于该ChannelPipeline
+ * 中的下一个 能够处理该事件的ChannelHandler。
  */
 public interface ChannelHandlerContext extends AttributeMap, ChannelInboundInvoker, ChannelOutboundInvoker {
 
     /**
+     * 返回绑定到这个实例的Channel
      * Return the {@link Channel} which is bound to the {@link ChannelHandlerContext}.
      */
     Channel channel();
@@ -135,6 +144,7 @@ public interface ChannelHandlerContext extends AttributeMap, ChannelInboundInvok
     EventExecutor executor();
 
     /**
+     * 返回这个实例的唯一名称
      * The unique name of the {@link ChannelHandlerContext}.The name was used when then {@link ChannelHandler}
      * was added to the {@link ChannelPipeline}. This name can also be used to access the registered
      * {@link ChannelHandler} from the {@link ChannelPipeline}.
@@ -142,41 +152,88 @@ public interface ChannelHandlerContext extends AttributeMap, ChannelInboundInvok
     String name();
 
     /**
+     * 返回绑定到这个实例的ChannelHandler
      * The {@link ChannelHandler} that is bound this {@link ChannelHandlerContext}.
      */
     ChannelHandler handler();
 
     /**
+     * 如果所关联的ChannelHandler已经从ChannelPipeline中移除，则返回true
      * Return {@code true} if the {@link ChannelHandler} which belongs to this context was removed
      * from the {@link ChannelPipeline}. Note that this method is only meant to be called from with in the
      * {@link EventLoop}.
      */
     boolean isRemoved();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelRegistered(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelHandlerContext fireChannelRegistered();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelUnregistered(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelHandlerContext fireChannelUnregistered();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelActive(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelHandlerContext fireChannelActive();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelInactive(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelHandlerContext fireChannelInactive();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable)}方法
+     */
     @Override
     ChannelHandlerContext fireExceptionCaught(Throwable cause);
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#userEventTriggered(io.netty.channel.ChannelHandlerContext, java.lang.Object)}方法
+     */
     @Override
     ChannelHandlerContext fireUserEventTriggered(Object evt);
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelRead(io.netty.channel.ChannelHandlerContext, java.lang.Object)}方法
+     */
     @Override
     ChannelHandlerContext fireChannelRead(Object msg);
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelReadComplete(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelHandlerContext fireChannelReadComplete();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelWritabilityChanged(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelHandlerContext fireChannelWritabilityChanged();
 
@@ -187,11 +244,13 @@ public interface ChannelHandlerContext extends AttributeMap, ChannelInboundInvok
     ChannelHandlerContext flush();
 
     /**
+     * 返回这个实例关联的ChannelPipeline
      * Return the assigned {@link ChannelPipeline}
      */
     ChannelPipeline pipeline();
 
     /**
+     * 返回和这个实例相关联的Channel所配置的ByteBufAllocator
      * Return the assigned {@link ByteBufAllocator} which will be used to allocate {@link ByteBuf}s.
      */
     ByteBufAllocator alloc();

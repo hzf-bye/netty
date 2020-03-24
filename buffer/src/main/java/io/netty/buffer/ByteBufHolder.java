@@ -23,16 +23,19 @@ import io.netty.util.ReferenceCounted;
 public interface ByteBufHolder extends ReferenceCounted {
 
     /**
+     * 返回由这个ByteBufHolder所持有的ByteBuf
      * Return the data which is held by this {@link ByteBufHolder}.
      */
     ByteBuf content();
 
     /**
+     * 返回由这个ByteBufHolder的一个深拷贝，包括一个其所包含的ByteBuf非共享副本
      * Creates a deep copy of this {@link ByteBufHolder}.
      */
     ByteBufHolder copy();
 
     /**
+     * 返回由这个ByteBufHolder的一个深拷贝，包括一个其所包含的ByteBuf共享副本
      * Duplicates this {@link ByteBufHolder}. Be aware that this will not automatically call {@link #retain()}.
      */
     ByteBufHolder duplicate();

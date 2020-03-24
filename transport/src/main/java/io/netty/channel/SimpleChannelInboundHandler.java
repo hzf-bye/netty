@@ -116,5 +116,13 @@ public abstract class SimpleChannelInboundHandler<I> extends ChannelInboundHandl
      * @param msg           the message to handle
      * @throws Exception    is thrown if an error occurred
      */
+    /**
+     * 当从服务器接收到一条消息后后将被执行。
+     *
+     * 从服务器发送的消息可能会被分块接受。
+     * 比如服务器发送了5字节的数据，channelRead0方法可能会被调用2此，
+     * 第一次是3字节的ByteBuf，第二次是2字节的ByteBuf。
+     * 作为一个面向流的协议，tcp保证了字节数组会按照服务器发送的顺序被接受(tcp每段数据都有序列号)
+     */
     protected abstract void channelRead0(ChannelHandlerContext ctx, I msg) throws Exception;
 }

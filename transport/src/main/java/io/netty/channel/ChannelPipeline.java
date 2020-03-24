@@ -212,11 +212,19 @@ import java.util.NoSuchElementException;
  * A {@link ChannelHandler} can be added or removed at any time because a {@link ChannelPipeline} is thread safe.
  * For example, you can insert an encryption handler when sensitive information is about to be exchanged, and remove it
  * after the exchange.
+ *
+ * netty总就是将ChannelPipeline的头部的入站口作为头部，出站口作为尾部。
+ * 因此从代码可以看到：
+ * 1.当操作{@link DefaultChannelPipeline#fireChannelRegistered()}等ChannelPipeline的入站操作时
+ * 是从头部开始调用的。
+ * 2.当操作{@link DefaultChannelPipeline#bind(java.net.SocketAddress)}等ChannelPipeline的出站操作时
+ * 是从尾部开始调用的。
  */
 public interface ChannelPipeline
         extends ChannelInboundInvoker, ChannelOutboundInvoker, Iterable<Entry<String, ChannelHandler>> {
 
     /**
+     * 将ChannelHandler添加到ChannelPipeline中，添加到ChannelHandler链头部
      * Inserts a {@link ChannelHandler} at the first position of this pipeline.
      *
      * @param name     the name of the handler to insert first
@@ -245,6 +253,8 @@ public interface ChannelPipeline
     ChannelPipeline addFirst(EventExecutorGroup group, String name, ChannelHandler handler);
 
     /**
+     *
+     * 将ChannelHandler添加到ChannelPipeline中，添加到ChannelHandler链尾部
      * Appends a {@link ChannelHandler} at the last position of this pipeline.
      *
      * @param name     the name of the handler to append
@@ -273,6 +283,7 @@ public interface ChannelPipeline
     ChannelPipeline addLast(EventExecutorGroup group, String name, ChannelHandler handler);
 
     /**
+     * 将ChannelHandler添加到ChannelPipeline中，添加到baseName的DefaultChannelHandlerContext的前面
      * Inserts a {@link ChannelHandler} before an existing handler of this
      * pipeline.
      *
@@ -309,6 +320,8 @@ public interface ChannelPipeline
     ChannelPipeline addBefore(EventExecutorGroup group, String baseName, String name, ChannelHandler handler);
 
     /**
+     * 将ChannelHandler添加到ChannelPipeline中，添加到baseName的DefaultChannelHandlerContext的后面
+     *      * Inserts a {@link ChannelHandler} before an existing handler of this
      * Inserts a {@link ChannelHandler} after an existing handler of this
      * pipeline.
      *
@@ -381,6 +394,7 @@ public interface ChannelPipeline
     ChannelPipeline addLast(EventExecutorGroup group, ChannelHandler... handlers);
 
     /**
+     * 将ChannelHandler从ChannelPipeline中移除
      * Removes the specified {@link ChannelHandler} from this pipeline.
      *
      * @param  handler          the {@link ChannelHandler} to remove
@@ -442,6 +456,8 @@ public interface ChannelPipeline
     ChannelHandler removeLast();
 
     /**
+     *
+     * 将ChannelPipeline中的一个ChannelHandler替换为另一个ChannelHandler
      * Replaces the specified {@link ChannelHandler} with a new handler in this pipeline.
      *
      * @param  oldHandler    the {@link ChannelHandler} to be replaced
@@ -532,6 +548,7 @@ public interface ChannelPipeline
     ChannelHandlerContext lastContext();
 
     /**
+     * 通过名称返回ChannelHandler
      * Returns the {@link ChannelHandler} with the specified name in this
      * pipeline.
      *
@@ -541,6 +558,7 @@ public interface ChannelPipeline
     ChannelHandler get(String name);
 
     /**
+     * 通过类型返回ChannelHandler
      * Returns the {@link ChannelHandler} of the specified type in this
      * pipeline.
      *
@@ -550,6 +568,7 @@ public interface ChannelPipeline
     <T extends ChannelHandler> T get(Class<T> handlerType);
 
     /**
+     * 返回与ChannelHandler绑定的ChannelHandlerContext
      * Returns the context object of the specified {@link ChannelHandler} in
      * this pipeline.
      *
@@ -584,6 +603,7 @@ public interface ChannelPipeline
     Channel channel();
 
     /**
+     * 返回ChannelPipeline中所有的ChannelHandler的名称
      * Returns the {@link List} of the handler names.
      */
     List<String> names();
@@ -594,30 +614,75 @@ public interface ChannelPipeline
      */
     Map<String, ChannelHandler> toMap();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelRegistered(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelPipeline fireChannelRegistered();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelUnregistered(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelPipeline fireChannelUnregistered();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelActive(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelPipeline fireChannelActive();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelInactive(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelPipeline fireChannelInactive();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable)}方法
+     */
     @Override
     ChannelPipeline fireExceptionCaught(Throwable cause);
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#userEventTriggered(io.netty.channel.ChannelHandlerContext, java.lang.Object)}方法
+     */
     @Override
     ChannelPipeline fireUserEventTriggered(Object event);
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelRead(io.netty.channel.ChannelHandlerContext, java.lang.Object)}方法
+     */
     @Override
     ChannelPipeline fireChannelRead(Object msg);
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelReadComplete(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelPipeline fireChannelReadComplete();
 
+    /**
+     * ChannelPipeline的入站操作
+     * 调用ChannelPipeline中下一个ChannelInboundHandler的
+     * {@link ChannelInboundHandler#channelWritabilityChanged(io.netty.channel.ChannelHandlerContext)}方法
+     */
     @Override
     ChannelPipeline fireChannelWritabilityChanged();
 

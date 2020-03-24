@@ -24,6 +24,7 @@ import java.net.SocketAddress;
 public interface ChannelOutboundInvoker {
 
     /**
+     *
      * Request to bind to the given {@link SocketAddress} and notify the {@link ChannelFuture} once the operation
      * completes, either because the operation was successful or because of an error.
      * <p>
@@ -35,6 +36,7 @@ public interface ChannelOutboundInvoker {
     ChannelFuture bind(SocketAddress localAddress);
 
     /**
+     *
      * Request to connect to the given {@link SocketAddress} and notify the {@link ChannelFuture} once the operation
      * completes, either because the operation was successful or because of an error.
      * <p>

@@ -101,6 +101,10 @@ public abstract class AbstractByteBufAllocator implements ByteBufAllocator {
         emptyBuf = new EmptyByteBuf(this);
     }
 
+    /**
+     * 创建一个基于堆或者直接内存存储的ByteBuf
+     * @return
+     */
     @Override
     public ByteBuf buffer() {
         if (directByDefault) {
@@ -149,6 +153,10 @@ public abstract class AbstractByteBufAllocator implements ByteBufAllocator {
         return heapBuffer(initialCapacity, maxCapacity);
     }
 
+    /**
+     * 返回一个基于堆内存存储的ByteBuf
+     * @return
+     */
     @Override
     public ByteBuf heapBuffer() {
         return heapBuffer(DEFAULT_INITIAL_CAPACITY, DEFAULT_MAX_CAPACITY);
@@ -187,6 +195,7 @@ public abstract class AbstractByteBufAllocator implements ByteBufAllocator {
         return newDirectBuffer(initialCapacity, maxCapacity);
     }
 
+
     @Override
     public CompositeByteBuf compositeBuffer() {
         if (directByDefault) {
@@ -195,6 +204,9 @@ public abstract class AbstractByteBufAllocator implements ByteBufAllocator {
         return compositeHeapBuffer();
     }
 
+    /**
+     * 返回一个可以通过添加最大到指定数目的基于堆的或者基于字节内存存储的缓冲区来扩展的CompositeByteBuf
+     */
     @Override
     public CompositeByteBuf compositeBuffer(int maxNumComponents) {
         if (directByDefault) {

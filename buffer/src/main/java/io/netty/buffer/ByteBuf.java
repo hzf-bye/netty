@@ -563,10 +563,13 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
      * @throws IndexOutOfBoundsException
      *         if the specified {@code index} is less than {@code 0} or
      *         {@code index + 1} is greater than {@code this.capacity}
+     * 返回给定索引的Boolean值
      */
     public abstract boolean getBoolean(int index);
 
     /**
+     * 返回给定索引的字节
+     *
      * Gets a byte at the specified absolute {@code index} in this buffer.
      * This method does not modify {@code readerIndex} or {@code writerIndex} of
      * this buffer.
@@ -578,6 +581,7 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract byte  getByte(int index);
 
     /**
+     * 将给定索引处的无符号作为short返回
      * Gets an unsigned byte at the specified absolute {@code index} in this
      * buffer.  This method does not modify {@code readerIndex} or
      * {@code writerIndex} of this buffer.
@@ -634,6 +638,8 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract int getUnsignedShortLE(int index);
 
     /**
+     * 返回给定索引处的24位中等int
+     *
      * Gets a 24-bit medium integer at the specified absolute {@code index} in
      * this buffer.  This method does not modify {@code readerIndex} or
      * {@code writerIndex} of this buffer.
@@ -806,6 +812,8 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     }
 
     /**
+     * 将该缓存区从给定索引开始的数据传送到指定的目的地。
+     *
      * Transfers this buffer's data to the specified destination starting at
      * the specified absolute {@code index} until the destination becomes
      * non-writable.  This method is basically same with
@@ -1416,6 +1424,7 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract int   readUnsignedShortLE();
 
     /**
+     * 返回当前readerIndex处的24位中等int值 readerIndex增加3
      * Gets a 24-bit medium integer at the current {@code readerIndex}
      * and increases the {@code readerIndex} by {@code 3} in this buffer.
      *
@@ -1644,6 +1653,8 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
     public abstract ByteBuf readBytes(ByteBuf dst, int length);
 
     /**
+     * 从当前ByteBuf的readerIndex处开始的数据传输到目标dst，从目标的dstIndex开始的位置，传输长度为length
+     * readerIndex将增加传输的字节数，即为length。
      * Transfers this buffer's data to the specified destination starting at
      * the current {@code readerIndex} and increases the {@code readerIndex}
      * by the number of the transferred bytes (= {@code length}).

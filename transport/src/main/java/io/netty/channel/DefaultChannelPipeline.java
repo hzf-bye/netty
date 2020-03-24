@@ -42,7 +42,16 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 /**
  * The default {@link ChannelPipeline} implementation.  It is usually created
  * by a {@link Channel} implementation when the {@link Channel} is created.
- */
+ *
+ *
+ * netty总就是将ChannelPipeline的头部的入站口作为头部，出站口作为尾部。
+ * 因此从代码可以看到：
+ * 1.当操作{@link DefaultChannelPipeline#fireChannelRegistered()}等ChannelPipeline的入站操作时
+ * 是从头部开始调用的。
+ * 2.当操作{@link DefaultChannelPipeline#bind(java.net.SocketAddress)}等ChannelPipeline的出站操作时
+ * 是从尾部开始调用的。
+ *
+*/
 public class DefaultChannelPipeline implements ChannelPipeline {
 
     static final InternalLogger logger = InternalLoggerFactory.getInstance(DefaultChannelPipeline.class);
